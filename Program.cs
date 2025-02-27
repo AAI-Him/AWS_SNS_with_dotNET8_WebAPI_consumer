@@ -1,13 +1,21 @@
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using ServiceBusReceiverApi.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var options = builder.Configuration.GetAWSOptions();
+IAmazonSimpleNotificationService client = options.CreateServiceClient<IAmazonSimpleNotificationService>();
+
+builder.Services.AddAWSService<IAmazonSimpleNotificationService>();
+
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddHostedService<SqsMessageProcessor>(); // Register the background service
+/*builder.Services.AddHostedService<SqsMessageProcessor>();*/ // Register the background service
 
 // Add Swagger
 builder.Services.AddSwaggerGen(c =>
